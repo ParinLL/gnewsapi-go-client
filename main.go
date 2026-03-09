@@ -39,6 +39,8 @@ func main() {
 		country = "tw" // default
 	}
 
+	maxEnv := os.Getenv("NEWS_MAX")
+
 	categoryEnv := os.Getenv("NEWS_CATEGORY")
 	var categories []string
 	if categoryEnv != "" {
@@ -56,6 +58,9 @@ func main() {
 
 	for _, category := range categories {
 		url := fmt.Sprintf("https://gnews.io/api/v4/top-headlines?country=%s&apikey=%s", country, apiKey)
+		if maxEnv != "" {
+			url += fmt.Sprintf("&max=%s", maxEnv)
+		}
 		if category != "" {
 			url += fmt.Sprintf("&category=%s", category)
 			fmt.Printf("--- Top Headlines for Category: %s ---\n", category)

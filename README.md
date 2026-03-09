@@ -15,6 +15,7 @@ Set your Gnews API key as an environment variable:
 export GNEWS_API_KEY="your_api_key_here"
 export NEWS_COUNTRY="tw" # optional, defaults to 'tw'
 export NEWS_CATEGORY="world,technology,business" # optional, comma-separated list
+export NEWS_MAX="10" # optional, max number of articles (1-10)
 ```
 
 ### Windows (PowerShell)
@@ -22,6 +23,7 @@ export NEWS_CATEGORY="world,technology,business" # optional, comma-separated lis
 $env:GNEWS_API_KEY="your_api_key_here"
 $env:NEWS_COUNTRY="tw"
 $env:NEWS_CATEGORY="world,technology,business"
+$env:NEWS_MAX="10"
 ```
 
 Run the application:
@@ -56,5 +58,5 @@ docker build -t gnewsapi-go-client .
 Run the Docker image:
 
 ```bash
-docker run -e GNEWS_API_KEY="your_api_key_here" -e NEWS_COUNTRY="tw" -e NEWS_CATEGORY="technology,business" gnewsapi-go-client
+docker run -e GNEWS_API_KEY="your_api_key_here" -e NEWS_COUNTRY="tw" -e NEWS_CATEGORY="technology,business" -e NEWS_MAX="10" gnewsapi-go-client
 ```
