@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -29,9 +30,26 @@ type Article struct {
 }
 
 func main() {
+	debug := flag.Bool("debug", false, "Enable debug mode (print requested URLs)")
+	
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "  --debug        Enable debug mode (print requested URLs)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  --help, -h     Show this help message\n\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "Environment variables:\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  GNEWS_API_KEY  Your Gnews API key (required)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_COUNTRY   Country code for news (default: tw)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_MAX       Maximum number of articles to fetch\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_CATEGORY  Comma-separated list of categories (e.g., world,technology)\n")
+	}
+	
+	flag.Parse()
+
 	apiKey := os.Getenv("GNEWS_API_KEY")
 	if apiKey == "" {
-		log.Fatal("GNEWS_API_KEY environment variable is not set. Please set it to your Gnews API key.")
+		log.Println("GNEWS_API_KEY environment variable is not set. Please set it to your Gnews API key.")
+		flag.Usage()
+		os.Exit(1)
 	}
 
 	country := os.Getenv("NEWS_COUNTRY")
@@ -69,6 +87,10 @@ func main() {
 			fmt.Printf("--- Top Headlines ---\n")
 		}
 
+		if *debug {
+			fmt.Printf("[DEBUG] Request URL: %s\n", url)
+		}
+
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			log.Fatalf("Error creating request for category %s: %v", category, err)
@@ -83,7 +105,14 @@ func main() {
 		if resp.StatusCode != http.StatusOK {
 			body, _ := io.ReadAll(resp.Body)
 			resp.Body.Close()
+			if *debug {
+				fmt.Printf("[DEBUG] Raw Error Response: %s\n", string(body))
+			}
 			log.Fatalf("API request failed with status %d: %s", resp.StatusCode, string(body))
+		}
+
+		if *debug {
+			fmt.Printf("[DEBUG] Request successful, status code: %d\n", resp.StatusCode)
 		}
 
 		var newsResp NewsResponse

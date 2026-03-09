@@ -32,6 +32,18 @@ Run the application:
 go run main.go
 ```
 
+### Command-Line Flags
+
+The application also supports the following command-line flags:
+
+- `--help` or `-h`: Show usage instructions and expected environment variables.
+- `--debug`: Enable debug mode, which prints the constructed API URLs and raw error responses.
+
+Example:
+```bash
+go run main.go --debug
+```
+
 ## Build and Install (Linux)
 
 You can build the executable and move it to a directory in your system's `PATH` (such as `/usr/local/bin`) to run it from anywhere.
