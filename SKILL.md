@@ -2,7 +2,7 @@
 name: gnews
 description: Use this skill when the user wants to run, troubleshoot, or extend the gnews-client CLI for fetching top headlines from GNews by country, category, and max article count.
 homepage: https://github.com/ParinLL/gnewsapi-go-client
-metadata: {"openclaw":{"homepage":"https://github.com/ParinLL/gnewsapi-go-client","requires":{"env":["GNEWS_API_KEY"],"binaries":["go"]},"primaryEnv":"GNEWS_API_KEY"}}
+metadata: {"requires":{"env":["GNEWS_API_KEY"],"binaries":["go"]},"openclaw":{"homepage":"https://github.com/ParinLL/gnewsapi-go-client","requires":{"env":["GNEWS_API_KEY"],"binaries":["go"]},"primaryEnv":"GNEWS_API_KEY"}}
 ---
 
 # GNews CLI Skill
@@ -19,6 +19,20 @@ Use this skill for tasks related to the `gnews-client` command in this repositor
 - GitHub: https://github.com/ParinLL/gnewsapi-go-client
 
 ## How To Install
+
+```bash
+clawhub install gnews
+```
+
+Install from source (HTTPS default):
+
+```bash
+git clone https://github.com/ParinLL/gnewsapi-go-client.git
+cd gnewsapi-go-client
+go install .
+```
+
+SSH clone (optional):
 
 ```bash
 git clone git@github.com:ParinLL/gnewsapi-go-client.git

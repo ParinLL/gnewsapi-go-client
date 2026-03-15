@@ -1,3 +1,6 @@
 .env
 *.exe
 *.code-workspace
+gnewsapi-go-client
+gnews-client
+newsapi-go-client

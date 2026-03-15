@@ -6,10 +6,10 @@ A simple Go command-line client for fetching top headlines from Gnews API.
 
 This repository includes a root-level [`SKILL.md`](./SKILL.md) so it can be used as an OpenClaw skill.
 
-In OpenClaw/ClawHub, install from this GitHub repository:
+Recommended automated install (registry):
 
 ```bash
-clawhub install git@github.com:ParinLL/gnewsapi-go-client.git
+clawhub install gnews
 ```
 
 After installation, set:
