@@ -1,0 +1,10 @@
+interface:
+  display_name: "GNews CLI"
+  short_description: "Run and troubleshoot the GNews CLI skill"
+  default_prompt: "Use $gnews to fetch and summarize top GNews headlines safely."
+
+requirements:
+  env:
+    - "GNEWS_API_KEY"
+  binaries:
+    - "go"
