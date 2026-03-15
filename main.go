@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -20,8 +21,8 @@ type NewsResponse struct {
 
 type Article struct {
 	Source struct {
-		Name string  `json:"name"`
-		URL  string  `json:"url"`
+		Name string `json:"name"`
+		URL  string `json:"url"`
 	} `json:"source"`
 	Author      *string   `json:"author"`
 	Title       string    `json:"title"`
@@ -32,18 +33,21 @@ type Article struct {
 
 func main() {
 	debug := flag.Bool("debug", false, "Enable debug mode (print requested URLs)")
-	
+	country := flag.String("country", "tw", "Country code for news (default: tw)")
+	maxArticles := flag.Int("max", 0, "Maximum number of articles to fetch (optional)")
+	categoryList := flag.String("category", "", "Comma-separated list of categories (e.g., world,technology)")
+
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
 		fmt.Fprintf(flag.CommandLine.Output(), "  --debug        Enable debug mode (print requested URLs with redacted API key)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  --country      Country code for news (default: tw)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  --max          Maximum number of articles to fetch (optional)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  --category     Comma-separated list of categories (e.g., world,technology)\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "  --help, -h     Show this help message\n\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "Environment variables:\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "  GNEWS_API_KEY  Your Gnews API key (required)\n")
-		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_COUNTRY   Country code for news (default: tw)\n")
-		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_MAX       Maximum number of articles to fetch\n")
-		fmt.Fprintf(flag.CommandLine.Output(), "  NEWS_CATEGORY  Comma-separated list of categories (e.g., world,technology)\n")
 	}
-	
+
 	flag.Parse()
 
 	apiKey := os.Getenv("GNEWS_API_KEY")
@@ -53,40 +57,47 @@ func main() {
 		os.Exit(1)
 	}
 
-	country := os.Getenv("NEWS_COUNTRY")
-	if country == "" {
-		country = "tw" // default
+	if strings.TrimSpace(*country) == "" {
+		log.Println("--country cannot be empty")
+		flag.Usage()
+		os.Exit(1)
 	}
 
-	maxEnv := os.Getenv("NEWS_MAX")
+	if *maxArticles < 0 {
+		log.Println("--max must be >= 0")
+		flag.Usage()
+		os.Exit(1)
+	}
 
-	categoryEnv := os.Getenv("NEWS_CATEGORY")
 	var categories []string
-	if categoryEnv != "" {
-		for _, c := range strings.Split(categoryEnv, ",") {
+	if *categoryList != "" {
+		for _, c := range strings.Split(*categoryList, ",") {
 			trimmed := strings.TrimSpace(c)
 			if trimmed != "" {
 				categories = append(categories, trimmed)
 			}
 		}
 	}
-	
+
 	if len(categories) == 0 {
 		categories = []string{""} // Add an empty category to run the loop once without category filtering
 	}
 
 	for _, category := range categories {
-		url := fmt.Sprintf("https://gnews.io/api/v4/top-headlines?country=%s&apikey=%s", country, apiKey)
-		if maxEnv != "" {
-			url += fmt.Sprintf("&max=%s", maxEnv)
+		queryParams := url.Values{}
+		queryParams.Set("country", *country)
+		queryParams.Set("apikey", apiKey)
+		if *maxArticles > 0 {
+			queryParams.Set("max", strconv.Itoa(*maxArticles))
 		}
 		if category != "" {
-			url += fmt.Sprintf("&category=%s", category)
+			queryParams.Set("category", category)
 			fmt.Printf("--- Top Headlines for Category: %s ---\n", category)
 		} else {
-			url += "&category=general"
+			queryParams.Set("category", "general")
 			fmt.Printf("--- Top Headlines ---\n")
 		}
+		url := fmt.Sprintf("https://gnews.io/api/v4/top-headlines?%s", queryParams.Encode())
 
 		if *debug {
 			fmt.Printf("[DEBUG] Request URL: %s\n", redactAPIKey(url))

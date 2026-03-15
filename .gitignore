@@ -4,3 +4,4 @@
 gnewsapi-go-client
 gnews-client
 newsapi-go-client
+.gocache/

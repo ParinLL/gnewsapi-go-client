@@ -14,7 +14,7 @@ Use this skill when users need practical help installing and using the GNews CLI
 Use this skill when the user asks to:
 
 - Install the CLI from GitHub
-- Configure required/optional environment variables
+- Configure required environment variables and optional CLI flags
 - Run the binary and understand output behavior
 - Troubleshoot API key, permission, and network failures
 
@@ -46,18 +46,16 @@ sudo install gnews-client /usr/local/bin/
 export GNEWS_API_KEY="your-api-key"
 ```
 
-2. Optionally set runtime filters.
+2. Optionally pass runtime filters via CLI flags.
 
 ```bash
-export NEWS_COUNTRY="tw"
-export NEWS_CATEGORY="world,technology,business"
-export NEWS_MAX="10"
+./gnews-client --country tw --category world,technology,business --max 10
 ```
 
 Behavior:
-- `NEWS_COUNTRY` defaults to `tw` when unset.
-- `NEWS_CATEGORY` accepts comma-separated categories.
-- `NEWS_MAX` controls max returned articles per request.
+- `--country` defaults to `tw` when omitted.
+- `--category` accepts comma-separated categories.
+- `--max` controls max returned articles per request.
 
 3. Run the binary.
 
