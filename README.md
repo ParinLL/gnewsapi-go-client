@@ -4,7 +4,11 @@ A simple Go command-line client for fetching top headlines from Gnews API.
 
 ## Use With OpenClaw
 
-This repository includes a root-level [`SKILL.md`](./SKILL.md) so it can be used as an OpenClaw skill.
+This repository includes a publish-ready skill file at [`clawhub-publish/SKILL.md`](./clawhub-publish/SKILL.md).
+
+ClawHub page:
+
+- https://clawhub.ai/ParinLL/gnews
 
 Recommended automated install (registry):
 
@@ -94,9 +98,10 @@ docker run -e GNEWS_API_KEY="your_api_key_here" -e NEWS_COUNTRY="tw" -e NEWS_CAT
 To publish/update this skill for OpenClaw users:
 
 ```bash
-git add SKILL.md README.md
-git commit -m "Add OpenClaw skill metadata and usage docs"
+git add clawhub-publish/SKILL.md README.md
+git commit -m "Update ClawHub skill and README"
 git push origin main
+clawhub publish ./clawhub-publish --slug gnews --name "GNews CLI" --version <next-version> --tags "latest,news,cli,gnews" --changelog "<your changelog>"
 ```
 
 After pushing, re-sync/re-publish from your OpenClaw/ClawHub side if your workspace requires an explicit publish step.
