@@ -89,16 +89,3 @@ Run the Docker image:
 ```bash
 docker run -e GNEWS_API_KEY="your_api_key_here" gnewsapi-go-client --country tw --category technology,business --max 10
 ```
-
-## Publish Skill
-
-To publish/update this skill for OpenClaw users:
-
-```bash
-git add clawhub-publish/SKILL.md README.md
-git commit -m "Update ClawHub skill and README"
-git push origin main
-clawhub publish ./clawhub-publish --slug gnews --name "GNews CLI" --version <next-version> --tags "latest,news,cli,gnews" --changelog "<your changelog>"
-```
-
-After pushing, re-sync/re-publish from your OpenClaw/ClawHub side if your workspace requires an explicit publish step.
