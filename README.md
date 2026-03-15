@@ -53,7 +53,7 @@ go run main.go
 The application also supports the following command-line flags:
 
 - `--help` or `-h`: Show usage instructions and expected environment variables.
-- `--debug`: Enable debug mode, which prints the constructed API URLs and raw error responses.
+- `--debug`: Enable debug mode, which prints the constructed API URLs with `apikey` redacted and raw error responses.
 
 Example:
 ```bash

@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -34,7 +35,7 @@ func main() {
 	
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
-		fmt.Fprintf(flag.CommandLine.Output(), "  --debug        Enable debug mode (print requested URLs)\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "  --debug        Enable debug mode (print requested URLs with redacted API key)\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "  --help, -h     Show this help message\n\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "Environment variables:\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "  GNEWS_API_KEY  Your Gnews API key (required)\n")
@@ -88,7 +89,7 @@ func main() {
 		}
 
 		if *debug {
-			fmt.Printf("[DEBUG] Request URL: %s\n", url)
+			fmt.Printf("[DEBUG] Request URL: %s\n", redactAPIKey(url))
 		}
 
 		req, err := http.NewRequest("GET", url, nil)
@@ -130,4 +131,19 @@ func main() {
 			fmt.Printf("   URL: %s\n\n", article.URL)
 		}
 	}
+}
+
+func redactAPIKey(rawURL string) string {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL
+	}
+
+	q := parsed.Query()
+	if q.Get("apikey") != "" {
+		q.Set("apikey", "REDACTED")
+		parsed.RawQuery = q.Encode()
+	}
+
+	return parsed.String()
 }

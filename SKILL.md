@@ -52,7 +52,7 @@ sudo install gnews-client /usr/local/bin/
 1. Ensure `GNEWS_API_KEY` is set.
 2. Set optional filters via `NEWS_COUNTRY`, `NEWS_CATEGORY`, and `NEWS_MAX`.
 3. Run `gnews-client`.
-4. Add `--debug` if API requests need troubleshooting.
+4. Add `--debug` if API requests need troubleshooting; request URLs are logged with redacted `apikey`.
 
 ## Output Expectations
 
